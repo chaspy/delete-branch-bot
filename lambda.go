@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/aws/aws-lambda-go/lambda"
+//	"github.com/chaspy/delete-branch/model"
 )
 
 type MyEvent struct {
