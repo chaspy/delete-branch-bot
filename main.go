@@ -3,15 +3,22 @@ package main
 import (
 	"fmt"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/chaspy/delete-branch/model"
 )
 
 type MyResponse struct {
 	Message string `json:"Answer:"`
 }
 
-func delete_branch(event model.PullRequestEvent) (MyResponse, error) {
-	return MyResponse{Message: fmt.Sprintf("PullRequest action is %s!!", event.Payload.Action)}, nil
+type PullRequestEvent struct {
+	Action string `json:"action"`
+	Number int    `json:"number"`
+}
+
+func delete_branch(event PullRequestEvent) (MyResponse, error) {
+	fmt.Println("log start")
+	fmt.Println(event)
+	fmt.Println("log end")
+	return MyResponse{Message: fmt.Sprintf("PullRequest action is %s!!", event.Action)}, nil
 }
 
 func main() {
