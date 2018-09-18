@@ -1,0 +1,11 @@
+{
+  "action": "closed",
+  "pull_request": {
+    "head": {
+      "ref": "test-branch",
+      "repo": {
+        "full_name": "chaspy/test-delete-branch"
+        }
+    }
+  }
+}
