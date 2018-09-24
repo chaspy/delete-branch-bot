@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -32,6 +33,10 @@ type PullRequestEvent struct {
 			} `json:"repo"`
 		} `json:"head"`
 	}
+}
+
+type GithubKeys struct {
+	AccessToken string `json:"GITHUB_ACCESS_TOKEN"`
 }
 
 func delete_branch(event PullRequestEvent) (MyResponse, error) {
@@ -67,6 +72,14 @@ func delete_branch(event PullRequestEvent) (MyResponse, error) {
 		fmt.Println(event.Action)
 		// Create client
 		client := &http.Client{}
+		var keys GithubKeys
+		raw, err := ioutil.ReadFile("./keys.json")
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+		json.Unmarshal(raw, &keys)
+
 
 		//Create request
 		Owner := event.PullRequest.Head.Repo.Owner.Login
