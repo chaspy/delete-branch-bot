@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"net/http"
+	"os"
 
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/google/go-github/github"
+	"golang.org/x/oauth2"
 )
 
 type MyResponse struct {
@@ -70,8 +73,6 @@ func delete_branch(event PullRequestEvent) (MyResponse, error) {
 	// ref: https://github.com/github/platform-samples/blob/b047a807dd43a3f76c2cbf0e85af3ffadeb2b880/api/ruby/building-your-first-github-app/advanced_server.rb#L24-L44
 	if event.Action == "closed" || event.Action == "merged" {
 		fmt.Println(event.Action)
-		// Create client
-		client := &http.Client{}
 		var keys GithubKeys
 		raw, err := ioutil.ReadFile("./keys.json")
 		if err != nil {
@@ -80,37 +81,29 @@ func delete_branch(event PullRequestEvent) (MyResponse, error) {
 		}
 		json.Unmarshal(raw, &keys)
 
+		// Authentication
+		ctx := context.Background()
+		ts := oauth2.StaticTokenSource(
+			&oauth2.Token{AccessToken: keys.AccessToken},
+		)
+		tc := oauth2.NewClient(ctx, ts)
+
+		// Create client via go-github library
+		client := github.NewClient(tc)
 
 		//Create request
 		Owner := event.PullRequest.Head.Repo.Owner.Login
 		RepoName := event.PullRequest.Head.Repo.Name
 		HeadRefs := event.PullRequest.Head.Ref
-		req, err := http.NewRequest("DELETE", "https://api.github.com/repos/"+Owner+"/"+RepoName+"/git/refs/"+HeadRefs, nil)
+
+		resp, err := client.Git.DeleteRef(ctx, Owner, RepoName, HeadRefs)
 		if err != nil {
 			fmt.Println(err)
 			return message, errorType
 		}
-
-		// Fetch request
-		resp, err := client.Do(req)
-		if err != nil {
-			fmt.Println(err)
-			return message, errorType
-		}
-
-		// Close boty
-		defer resp.Body.Close()
-
-		respBody, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			fmt.Println(err)
-			return message, errorType
-		}
-
-		// Display Results
 		fmt.Println("response Status : ", resp.Status)
 		fmt.Println("response Headers : ", resp.Header)
-		fmt.Println("response Body : ", string(respBody))
+		fmt.Println("response Body : ", resp.Body)
 
 	} else {
 		fmt.Println("no match action")
