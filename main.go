@@ -47,6 +47,12 @@ func delete_branch(event PullRequestEvent) (MyResponse, error) {
   //
   // If there is concern, it will be part of certification.
   // ref: https://github.com/github/platform-samples/blob/b047a807dd43a3f76c2cbf0e85af3ffadeb2b880/api/ruby/building-your-first-github-app/advanced_server.rb#L24-L44
+	if event.Action == "closed" || event.Action == "merged" {
+		fmt.Println(event.Action)
+	} else {
+		fmt.Println("no match action")
+	}
+
 	return MyResponse{Message: fmt.Sprintf("PullRequest action is %s!! repo is %s!! branch name is %s!!", event.Action, event.PullRequest.Head.Ref, event.PullRequest.Head.Repo.FullName)}, nil
 }
 
