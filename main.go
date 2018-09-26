@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/aws/aws-lambda-go/lambda"
@@ -520,7 +522,9 @@ func delete_branch(event PullRequestEvent) (MyResponse, error) {
 
 		// Create client via go-github library
 		tr := http.DefaultTransport
-		itr, err := ghinstallation.NewKeyFromFile(tr, 17630, 348213, "private-key.pem")
+		GITHUB_APP_ID, _ := strconv.Atoi(os.Getenv("GITHUB_APP_IDENTIFIER"))
+		GITHUB_INSTALLATION_ID, _ := strconv.Atoi(os.Getenv("GITHUB_APP_INSTLLATIONID"))
+		itr, err := ghinstallation.NewKeyFromFile(tr, GITHUB_APP_ID, GITHUB_INSTALLATION_ID, os.Getenv("GITHUB_PRIVATE_KEY"))
 		if err != nil {
 			log.Fatal(err)
 		}
