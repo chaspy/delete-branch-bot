@@ -22,10 +22,6 @@ type GithubKeys struct {
 }
 
 func delete_branch(event PullRequestEvent) (MyResponse, error) {
-	fmt.Println("log start")
-	fmt.Println(event)
-	fmt.Println("log end")
-
 	var message MyResponse
 	var errorType error
 
