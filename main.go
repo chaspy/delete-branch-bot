@@ -60,7 +60,7 @@ func delete_branch(event PullRequestEvent) (MyResponse, error) {
 		fmt.Println("no match action")
 	}
 
-	return MyResponse{Message: fmt.Sprintf("PullRequest action is %s!! repo is %s!! branch name is %s!!", event.Action, event.PullRequest.Head.Ref, event.PullRequest.Head.Repo.FullName)}, nil
+	return MyResponse{Message: fmt.Sprintf("PullRequest action is %s!! repo is %s!! branch name is %s!!", event.Action, event.PullRequest.Head.Repo.FullName, event.PullRequest.Head.Ref)}, nil
 }
 
 func main() {
