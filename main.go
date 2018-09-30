@@ -13,17 +13,19 @@ import (
 	"github.com/google/go-github/github"
 )
 
-type MyResponse struct {
-	Message string `json:"Answer:"`
+type Response struct {
+	Deleted bool
+	Repo    string
+	Branch  string
 }
 
 type GithubKeys struct {
 	AccessToken string `json:"GITHUB_ACCESS_TOKEN"`
 }
 
-func delete_branch(event PullRequestEvent) (MyResponse, error) {
-	var message MyResponse
+func delete_branch(event PullRequestEvent) (Response, error) {
 	var errorType error
+	res := Response{Repo: event.PullRequest.Head.Repo.FullName, Branch: event.PullRequest.Head.Ref}
 
 	if event.Action == "closed" || event.Action == "merged" {
 		fmt.Println(event.Action)
@@ -34,6 +36,8 @@ func delete_branch(event PullRequestEvent) (MyResponse, error) {
 		itr, err := ghinstallation.NewKeyFromFile(tr, GITHUB_APP_ID, event.Installation.ID, os.Getenv("GITHUB_PRIVATE_KEY"))
 		if err != nil {
 			log.Fatal(err)
+			res.Deleted = false
+			return res, errorType
 		}
 
 		fmt.Printf("itr:%v", itr)
@@ -50,17 +54,20 @@ func delete_branch(event PullRequestEvent) (MyResponse, error) {
 		if err != nil {
 			fmt.Println(err)
 			fmt.Println("Error Occured")
-			return message, errorType
+			res.Deleted = false
+			return res, errorType
 		}
 		fmt.Println("response Status : ", resp.Status)
 		fmt.Println("response Headers : ", resp.Header)
 		fmt.Println("response Body : ", resp.Body)
 
+		res.Deleted = true
 	} else {
 		fmt.Println("no match action")
+		res.Deleted = false
 	}
 
-	return MyResponse{Message: fmt.Sprintf("PullRequest action is %s!! repo is %s!! branch name is %s!!", event.Action, event.PullRequest.Head.Repo.FullName, event.PullRequest.Head.Ref)}, nil
+	return res, nil
 }
 
 func main() {
