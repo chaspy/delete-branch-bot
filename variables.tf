@@ -1,3 +1,13 @@
+terraform {
+  required_version = ">= 0.11.0"
+
+  backend "s3" {
+    bucket = "delete-branch-bot"
+    key    = "delete-branch-bot.tfstate"
+    region = "ap-northeast-1"
+  }
+}
+
 variable "aws_access_key" {}
 variable "aws_secret_key" {}
 variable "region" {
