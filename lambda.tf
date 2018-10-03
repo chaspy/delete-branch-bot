@@ -7,5 +7,12 @@ resource "aws_lambda_function" "delete_branch_bot" {
     handler = "delete-branch"
     runtime = "go1.x"
     timeout = 150
+
+    environment {
+        variables = {
+            GITHUB_APP_IDENTIFIER = "17630"
+            GITHUB_PRIVATE_KEY = "private-key.pem"
+        }
+    }
 }
 
