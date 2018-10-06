@@ -19,3 +19,7 @@ provider "aws" {
   secret_key = "${var.aws_secret_key}"
   region     = "${var.region}"
 }
+
+variable "aws_account_id" {
+    default = "655123516369"
+}
