@@ -45,7 +45,7 @@ func delete_branch(event PullRequestEvent) (Response, error) {
 		client := github.NewClient(&http.Client{Transport: itr})
 
 		//Create request
-		Owner := event.PullRequest.User.Login
+		Owner := event.PullRequest.Head.Repo.Owner.Login
 		RepoName := event.PullRequest.Head.Repo.Name
 		HeadRefs := "heads/" + event.PullRequest.Head.Ref
 
