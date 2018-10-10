@@ -1,0 +1,23 @@
+version: 2
+jobs:
+  build:
+    environment:
+      - GOPATH: /home/circleci/go
+    docker:
+      - image: circleci/golang:1.11
+    working_directory: /home/circleci/go/src/chaspy/delete-branch-bot
+    steps:
+      - checkout
+      - run: dep ensure
+      - run: sudo apt-get install -y python-pip
+      - run: sudo pip install awscli --system
+      - run: GOOS=linux GOARCH=amd64 go build -o delete-branch
+      - run: zip handler.zip ./delete-branch ./private-key.pem
+      - run:
+          command: |
+            if [[ "$CIRCLE_BRANCH" == "master" ]]; then
+              aws lambda update-function-code \
+                --function-name delete_branch_bot \
+                --zip-file fileb://handler.zip \
+                 --region ap-northeast-1
+            fi
