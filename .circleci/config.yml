@@ -12,6 +12,8 @@ jobs:
       - run: sudo apt-get install -y python-pip
       - run: sudo pip install awscli --system
       - run: GOOS=linux GOARCH=amd64 go build -o delete-branch
+      - run: cp ~/.ssh/id_rsa ./private-key.pem
+      - run: sudo chmod 644 ./private-key.pem
       - run: zip handler.zip ./delete-branch ./private-key.pem
       - run:
           command: |
@@ -19,5 +21,5 @@ jobs:
               aws lambda update-function-code \
                 --function-name delete_branch_bot \
                 --zip-file fileb://handler.zip \
-                 --region ap-northeast-1
+                --region ap-northeast-1
             fi
