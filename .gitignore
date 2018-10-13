@@ -1,3 +1,5 @@
 private-key.pem
 delete-branch
 *.zip
+.secret
+.terraform
