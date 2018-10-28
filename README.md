@@ -21,3 +21,11 @@ Go to the [App page](https://github.com/apps/delete-branch-bot) and select the r
     - Actions -> Deploy API -> Set `prod` stage name
     - You can see the Invoke URL
 1. Set Invoke URL to `Webhook URL` in GitHubApp setting
+
+## Articles
+### in Japanese
+- [PullRequestがマージされたら自動でブランチを削除するGitHubApp(delete-branch-bot)を作った](https://qiita.com/kamontia/items/af2bde70db740969c9b5)
+- [Pull RequestがMergeされたらBranchを削除するGitHub AppをAWS API GagewayとLambdaで作った](http://blog.chaspy.me/entry/2018/10/02/120000)
+
+### in English
+- [Release Delete-branch-bot as GithubApps](https://dev.to/kamontia/release-delete-branch-bot-as-githubapps-5g8)
