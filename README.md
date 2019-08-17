@@ -1,4 +1,7 @@
 # delete-branch
+
+**Deprecated** [Automatic deletion of branches](https://help.github.com/en/articles/managing-the-automatic-deletion-of-branches) was released
+
 Automatically delete branch when PR is merged
 
 ![delete-branch](./delete-branch.png)
